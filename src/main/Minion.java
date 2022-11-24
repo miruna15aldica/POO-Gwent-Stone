@@ -1,12 +1,11 @@
 package main;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.util.ArrayList;
 
-public abstract class Minion extends Card{
+public abstract class Minion extends Card {
     // cardType = 1;
     //protected int hasTank;
     protected int cardType;
@@ -15,14 +14,18 @@ public abstract class Minion extends Card{
     protected Boolean special;
     protected Boolean tank;
 
-    public Boolean getTank() {
+    public final Boolean getTank() {
         return tank;
     }
 
-    public void setTank(Boolean tank) {
+    public final void setTank(final Boolean tank) {
         this.tank = tank;
     }
 
+    /**
+     *
+     * @return
+     */
     public boolean hasTank() {
         return  this.tank;
     }
@@ -35,9 +38,12 @@ public abstract class Minion extends Card{
     protected Boolean abilityOnSelf;
     protected Boolean abilityOnEnemy;
 
-    public Minion(int mana, String description, ArrayList<String> colors, String name, int cardType, int health,
-                  int attackDamage, Boolean tank, Boolean placeOnFirstRow, Boolean placeOnLastRow, Boolean canAttackEnemy,
-                  Boolean abilityOnSelf, Boolean abilityOnEnemy) {
+    public Minion(final int mana, final String description, final ArrayList<String> colors,
+                  final String name, final int cardType, final int health,
+                  final int attackDamage, final Boolean tank,
+                  final Boolean placeOnFirstRow,
+                  final Boolean placeOnLastRow, final Boolean canAttackEnemy,
+                  final Boolean abilityOnSelf, final Boolean abilityOnEnemy) {
         super(mana, description, colors, name, cardType);
         this.health = health;
         this.attackDamage = attackDamage;
@@ -53,19 +59,28 @@ public abstract class Minion extends Card{
         this.special = false;
     }
 
+    /**
+     *
+     * @return
+     */
     public int getHealth() {
         return health;
     }
 
     abstract void specialAbility(Minion minion);
-    // freeze, unfreeze sunt usurele :)
 
-    public void destroyCardOnTable(Card card) {
+    /**
+     *
+     * @param card
+     */
+    public void destroyCardOnTable(final Card card) {
         this.health = 0;
     }
 
     @Override
-    public ObjectNode cardTransformToAnObjectNode(ObjectMapper objectMapper) {
+    public final ObjectNode cardTransformToAnObjectNode(final ObjectMapper objectMapper) {
+        // functie care transforma o carte intr-un obiect
+        //de tip JSON
         ObjectNode objectNode = objectMapper.createObjectNode();
         objectNode.put("mana", this.mana);
         objectNode.put("health", this.health);
@@ -75,49 +90,66 @@ public abstract class Minion extends Card{
         objectNode.set("colors", showColors(objectMapper));
         return  objectNode;
     }
-    public void damage(int attackDamage) {
-        if(this.health - attackDamage < 0) {
+
+    /**
+     *
+     * @param attackDamage
+     */
+    public void damage(final int attackDamage) {
+        if (this.health - attackDamage < 0) {
             this.health = 0;
-        }
-        else {
+        } else {
             this.health = this.health - attackDamage;
         }
     }
 
-    public void cardUsesAttack(Card card, Game game) {
-        if(card.cardType == 1) {
+    /**
+     *
+     * @param card
+     * @param game
+     */
+    public final void cardUsesAttack(final Card card, final Game game) {
+        final int magic = 3;
+        if (card.cardType == 1) {
             ((Minion) card).damage(this.attackDamage);
             this.attacked = true;
         }
-        if(card.cardType == 3) {
+        if (card.cardType == magic) {
             ((Hero) card).damage(this.attackDamage);
             this.attacked = true;
         }
     }
 
+    /**
+     *
+     */
     public void unfreeze() {
         this.frozen = false;
     }
 
-    public void setSpecial(Boolean special) {
+    public final void setSpecial(final Boolean special) {
         this.special = special;
     }
 
-    public Boolean getSpecial() {
+    public final Boolean getSpecial() {
         return special;
     }
 
-    public void setAttacked(Boolean attacked) {
+    public final void setAttacked(final Boolean attacked) {
         this.attacked = attacked;
     }
 
-    public Boolean isTank() {
+    public final Boolean isTank() {
         return tank;
     }
 
-    public Boolean getAttacked() {
+    public final Boolean getAttacked() {
         return attacked;
     }
 
+    /**
+     *
+     * @return
+     */
     public abstract Card copy();
 }

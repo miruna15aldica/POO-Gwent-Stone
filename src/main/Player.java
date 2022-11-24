@@ -2,8 +2,6 @@ package main;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import lombok.NonNull;
 
 import java.util.ArrayList;
 
@@ -19,7 +17,7 @@ public class Player {
 
     Hero hero;
 
-    public Player(int playerNumber, ArrayList<Deck> decks) {
+    public Player(final int playerNumber, final ArrayList<Deck> decks) {
         this.playerNumber = playerNumber;
         this.decks = decks;
         this.currentCards = new ArrayList<>();
@@ -27,7 +25,13 @@ public class Player {
         this.lost = 0;
     }
 
-    public void remake(int deckIdx, int seed, Hero hero) {
+    /**
+     *
+     * @param deckIdx
+     * @param seed
+     * @param hero
+     */
+    public void remake(final int deckIdx, final int seed, final Hero hero) {
 
         this.currentDeck = decks.get(deckIdx);
         this.currentDeck.shuffle(seed);
@@ -36,58 +40,94 @@ public class Player {
         this.mana = 0;
     }
 
-    public int getMana() {
+    public final int getMana() {
         return mana;
     }
 
-    public void setMana(int mana) {
+    public final void setMana(final int mana) {
         this.mana = mana;
     }
 
-    public void setHero(Hero hero) {
+    public final void setHero(final Hero hero) {
         this.hero = hero;
     }
 
+    /**
+     *
+     * @return
+     */
     public Hero getHero() {
         return this.hero;
     }
+
+    /**
+     *
+     * @return
+     */
     public int numberOfWins() {
         return this.win;
     }
 
-    public ArrayNode currentCardsEnvironment(ObjectMapper objectMapper) { // ??????????
-        // Aici trebuie facuta afisare - TODO
+    /**
+     *
+     * @param objectMapper
+     * @return
+     */
+    public ArrayNode currentCardsEnvironment(final ObjectMapper objectMapper) {
         ArrayNode cardsInHand = objectMapper.createArrayNode();
-        for (Card card : currentCards)
-            if (card.getCardType() == 2)
+        for (Card card : currentCards) {
+            if (card.getCardType() == 2) {
                 cardsInHand.add(card.cardTransformToAnObjectNode(objectMapper));
+            }
+        }
         return cardsInHand;
     }
+
+    /**
+     *
+     */
     public void raiseNumberVictory() {
         this.win += 1;
     }
 
-
-    public ArrayNode getCardsInHand(@NonNull ObjectMapper objectMapper) {
+    /**
+     *
+     * @param objectMapper
+     * @return
+     */
+    public ArrayNode getCardsInHand(final ObjectMapper objectMapper) {
         ArrayNode cardsInHand = objectMapper.createArrayNode();
-        for (Card card : currentCards)
+        for (Card card : currentCards) {
             cardsInHand.add(card.cardTransformToAnObjectNode(objectMapper));
+        }
         return cardsInHand;
     }
 
-    public Deck getPlayerDeck() {
+    public final Deck getPlayerDeck() {
         return currentDeck;
     }
 
-    public Card cardOnHand(int handIdx) {
+    /**
+     *
+     * @param handIdx
+     * @return
+     */
+    public Card cardOnHand(final int handIdx) {
         return currentCards.get(handIdx);
     }
 
-    public void dropCardFromHand(int handIdx) {
+    /**
+     *
+     * @param handIdx
+     */
+    public void dropCardFromHand(final int handIdx) {
         mana -= currentCards.get(handIdx).getMana();
         currentCards.remove(handIdx);
     }
 
+    /**
+     *
+     */
     public void drawCardFromDeck() {
         Card drawnCard = currentDeck.drawCard();
         if (drawnCard != null) {
@@ -95,19 +135,8 @@ public class Player {
         }
     }
 
-
-    // noi trebuie sa resetam ce am avut inainte, saa nu ne afecteze jocurile
-    // trecute
-
-
-    public Object getPlayerCards() {
+    public final Object getPlayerCards() {
         return currentCards;
     }
 
-//    public void cardOnBoard(int handIdx) {
-//        Card card = cardOnHand(handIdx);
-//        if(card.cardType == 1) {
-//            return "Cannot place environment card on table.";
-//        } else if()
-//    }
 }

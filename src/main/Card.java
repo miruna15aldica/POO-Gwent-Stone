@@ -17,7 +17,8 @@ public abstract class Card {
     protected int cardType;
 
 
-    public Card(int mana, String description, ArrayList<String> colors, String name, int cardType) {
+    public Card(final int mana, final String description,
+                final ArrayList<String> colors, final String name, final int cardType) {
         this.mana = mana;
         this.description = description;
         this.colors = colors;
@@ -25,31 +26,38 @@ public abstract class Card {
         this.cardType = cardType;
     }
 
-    public int getMana() {
+    public final int getMana() {
         return mana;
     }
 
-
-    public ArrayNode showColors(ObjectMapper objectMapper) {
+    /**
+     *
+     * @param objectMapper
+     * @return
+     */
+     public ArrayNode showColors(final ObjectMapper objectMapper) {
+         // functie care ne afiseaza culorile fiecarei carti
         ArrayNode colorName = objectMapper.createArrayNode();
-        for(String color : colors) {
+        for (String color : colors) {
             colorName.add(color);
         }
         return colorName;
     }
 
+    /**
+     *
+     * @param objectMapper
+     * @return
+     */
     public abstract ObjectNode cardTransformToAnObjectNode(ObjectMapper objectMapper);
 
-    public int getCardType() {
+    public final int getCardType() {
         return cardType;
     }
-//    public ArrayNode cardTransformToArrayNode(ObjectMapper objectMapper) {
-//        ArrayNode cardsName = objectMapper.createArrayNode();
-//        for(Card card : player.currentCards) {
-//            cardsName.add(card.cardTransformToAnObjectNode(objectMapper));
-//        }
-//        return cardsName;
-//    }
 
+    /**
+     *
+     * @return
+     */
     public abstract Card copy();
 }

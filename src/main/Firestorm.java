@@ -3,27 +3,28 @@ package main;
 import java.util.ArrayList;
 
 public class Firestorm extends Environment {
-    public Firestorm(int mana, String description, ArrayList<String> colors) {
+    public Firestorm(final int mana, final String description, final ArrayList<String> colors) {
         super(mana, description, colors, "Firestorm", true, false);
-        // abilitatea speciala e definita in clasa - Firestorm
-        //Scade cu 1 viața tuturor minionilor de pe rând
     }
 
     @Override
-    void specialAbility(Table table, int row) {
+    public final void specialAbility(final Table table, final int row) {
+        // abilitatea speciala e definita in clasa - Firestorm
+        //Scade cu 1 viața tuturor minionilor de pe rând
         this.special = true;
-        for(int i = 0; i < table.getTable()[row].length; ++i) {
+        for (int i = 0; i < table.getTable()[row].length; ++i) {
             Minion minion = (Minion) table.getTable()[row][i];
             if (minion != null) {
                 minion.health = minion.health - 1;
-                if (minion.health < 0)
+                if (minion.health < 0) {
                     minion.health = 0;
+                }
             }
         }
     }
 
     @Override
-    public Card copy() {
+    public final Card copy() {
         return new Firestorm(mana, description, colors);
     }
 }

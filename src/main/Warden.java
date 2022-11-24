@@ -1,23 +1,23 @@
 package main;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import java.util.ArrayList;
 
 public class Warden extends Minion {
-    public Warden(int mana, String description, ArrayList<String> colors, int health, int attackDamage) {
-        super(mana, description, colors, "Warden",1, health, attackDamage, true, true, false,
+    public Warden(final int mana, final String description, final ArrayList<String> colors,
+                  final int health, final int attackDamage) {
+        super(mana, description, colors, "Warden", 1,
+                health, attackDamage, true, true,
+                false,
                 true, false, false);
     }
 
     @Override
-    void specialAbility(Minion minion) {
+    void specialAbility(final Minion minion) {
 
     }
 
     @Override
-    public Card copy() {
+    public final Card copy() {
         return new Warden(mana, description, colors, health, attackDamage);
     }
 }

@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.Objects;
 
 /**
@@ -67,12 +66,9 @@ public final class Main {
         Input inputData = objectMapper.readValue(new File(CheckerConstants.TESTS_PATH + filePath1),
                 Input.class);
 
-
-        System.out.println("a intrat in main");
         InputLoader inputLoader = new InputLoader(inputData);
         inputLoader.run();
         ArrayNode result = inputLoader.output();
-        System.out.println(filePath2);
 
 
         ObjectWriter objectWriter = objectMapper.writerWithDefaultPrettyPrinter();

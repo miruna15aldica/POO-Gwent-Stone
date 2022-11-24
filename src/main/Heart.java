@@ -2,28 +2,32 @@ package main;
 
 import java.util.ArrayList;
 
-public class Heart extends Environment{
-    public Heart(int mana, String description, ArrayList<String> colors) {
-        super(mana, description, colors, "Heart Hound", true, false);
-        // abilitatea speciala in cadrul clasei - Heart Hound
-        //Se fură minionul adversarului cu cea mai mare viață de pe rând și se pune pe rândul “oglindit” aferent jucătorului.
+public class Heart extends Environment {
+    public Heart(final int mana, final String description,
+                  final ArrayList<String> colors) {
+        super(mana, description, colors, "Heart Hound",
+                true, false);
     }
 
     @Override
-    void specialAbility(Table table, int row) {
+    public final void specialAbility(final Table table, final int row) {
+        // abilitatea speciala in cadrul clasei - Heart Hound
+        //Se fură minionul adversarului cu cea mai mare viață
+        // de pe rând și se pune pe rândul “oglindit” aferent jucătorului.
         this.special = true;
         int aux = 0;
-        for(int i = 0; i < table.getTable()[row].length; ++i) {
+        for (int i = 0; i < table.getTable()[row].length; ++i) {
             Minion minion = (Minion) table.getTable()[row][i];
-            if(minion.health >= aux) {
+            if (minion.health >= aux) {
                 aux = minion.health;
             }
 
         }
-        for(int i = 0; i < table.getTable()[row].length; ++i) {
+        final int maxrow = 3;
+        for (int i = 0; i < table.getTable()[row].length; ++i) {
             Minion minion = (Minion) table.getTable()[row][i];
-            if(minion.health == aux) {
-                table.putCardOnRow(minion, 3 - row);
+            if (minion.health == aux) {
+                table.putCardOnRow(minion, maxrow - row);
                 table.getTable()[row][i] = null;
                 break;
             }
@@ -32,9 +36,8 @@ public class Heart extends Environment{
 
     }
 
-
     @Override
-    public Card copy() {
+    public final Card copy() {
         return new Heart(mana, description, colors);
     }
 

@@ -3,25 +3,32 @@ package main;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 
-import java.util.ArrayList;
-
 public class Table {
     public static Table instance = null;
     protected Card[][] table;
     public Table() {
-        this.table = new Card[4][5];
+        final int NUMBER_ROW = 4;
+        final int NUMBER_COLUMN = 5;
+        this.table = new Card[NUMBER_ROW][NUMBER_COLUMN];
 
     }
 
-    public Card[][] getTable() {
+    public final Card[][] getTable() {
         return table;
     }
-    public void placeCard(int row, Card card) {
-        if(card.cardType == 2) {
+
+    /**
+     *
+     * @param row
+     * @param card
+     */
+    final void placeCard(final int row, final Card card) {
+        // plaseaza cartea daca se poate pe randul dorit
+        if (card.cardType == 2) {
             System.out.println("Cannot place environment card on table");
             return;
         }
-        if(card.cardType == 1) {
+        if (card.cardType == 1) {
             for (int i = 0; i < table[row].length; ++i) {
                 if ((Minion) table[row][i] == null) {
                     putCardOnRow((Minion) card, row);
@@ -32,80 +39,119 @@ public class Table {
         }
 
     }
-    public int identifyTheRow(Card card) {
-        for(int row = 0; row < 4; row++) {
-            for(int i = 0; i < table[row].length; i++) {
-                if( ((Minion) card).equals((Minion) table[row][i]))
+
+    /**
+     *
+     * @param card
+     * @return
+     */
+    public final int identifyTheRow(final Card card) {
+        // identifica randul pe care se afla cartea
+        for (int row = 0; row < 4; row++) {
+            for (int i = 0; i < table[row].length; i++) {
+                if (((Minion) card).equals((Minion) table[row][i])) {
                     return row;
+                }
             }
         }
         return -1;
     }
 
-
-    public void putCardOnRow(Minion minion, int row) {
-        for(int i = 0; i < table[row].length; ++i) {
-            if( (Minion) table[row][i] == null) {
+    /**
+     *
+     * @param minion
+     * @param row
+     */
+    public final void putCardOnRow(Minion minion, final int row) {
+        for (int i = 0; i < table[row].length; ++i) {
+            if ((Minion) table[row][i] == null) {
                 minion = (Minion) table[row][i];
                 break;
             }
         }
     }
 
-    public ArrayNode getFrozenCards(ObjectMapper object) {
+    /**
+     *
+     * @param object
+     * @return
+     */
+    public ArrayNode getFrozenCards(final ObjectMapper object) {
         ArrayNode frozenCards = object.createArrayNode();
-        for(Card[] row : table )
-            for(Card card : row ) {
-                if(card != null && ((Minion)card).frozen)
+        for (Card[] row : table) {
+            for (Card card : row) {
+                if (card != null && ((Minion) card).frozen) {
                     frozenCards.add(card.cardTransformToAnObjectNode(object));
+                }
             }
+        }
         return frozenCards;
     }
 
 
-
-    public Card getCardAtPosition(int x, int y) {
+    /**
+     *
+     * @param x
+     * @param y
+     * @return
+     */
+    public Card getCardAtPosition(final int x, final int y) {
         return table[3 - x][y];
     }
 
-    public int findCardRow(Card card) {
-        for(int i = 0; i < table.length; i++) {
-            for(int j = 0; j < table[i].length; j++ )
-            {
-                if(card == table[i][j])
+    /**
+     *
+     * @param card
+     * @return
+     */
+    public final int findCardRow(final Card card) {
+        // returneaza randul pe care se afla cartea
+        for (int i = 0; i < table.length; i++) {
+            for (int j = 0; j < table[i].length; j++) {
+                if (card == table[i][j]) {
                     return i;
+                }
             }
         }
         return -1;
     }
-    public ArrayNode getCards(ObjectMapper object) {
-        // TODO - de mutat in table si de apelat de acolo!!
-        // e proprietatea lui TABLE!
 
+    /**
+     *
+     * @param object
+     * @return
+     */
+    public ArrayNode getCards(final ObjectMapper object) {
+        final int MAGIC_3 = 3;
         ArrayNode allCards = object.createArrayNode();
-        for (int i = 3; i >= 0; --i) {
+        for (int i = MAGIC_3; i >= 0; --i) {
             Card[] row = table[i];
             ArrayNode innerArrayNode = object.createArrayNode();
             for (Card card : row) {
-                if (card != null)
+                if (card != null) {
                     innerArrayNode.add(card.cardTransformToAnObjectNode(object));
+                }
             }
             allCards.add(innerArrayNode);
         }
         return allCards;
     }
 
-    void fillSpaces() {
+    /**
+     *
+     */
+    public final void fillSpaces() {
         for (Card[] row : table) {
             int i = 0;
             for (Card card : row) {
-                if (card != null && ((Minion)card).getHealth() > 0) {
+                if (card != null && ((Minion) card).getHealth() > 0) {
                     row[i] = card;
                     i++;
                 }
             }
-            for (; i < row.length; ++i)
+            for (; i < row.length; ++i) {
                 row[i] = null;
+            }
         }
     }
 

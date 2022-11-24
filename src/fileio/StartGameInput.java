@@ -80,10 +80,17 @@ public final class StartGameInput {
                 + startingPlayer
                 + '}';
     }
-    public Game getGame(Player[] players) {
+
+    /**
+     *
+     * @param players
+     * @return
+     */
+    public Game getGame(final Player[] players) {
         Hero firstHeroCard = (Hero) playerOneHero.toCard();
         Hero secondHeroCard = (Hero) playerTwoHero.toCard();
-        return new Game(players, playerOneDeckIdx, playerTwoDeckIdx, firstHeroCard, secondHeroCard, shuffleSeed, startingPlayer - 1);
+        return new Game(players, playerOneDeckIdx, playerTwoDeckIdx,
+                firstHeroCard, secondHeroCard, shuffleSeed, startingPlayer - 1);
     }
 
 }

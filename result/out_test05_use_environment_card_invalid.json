@@ -1,49 +1,40 @@
 [ {
-  "command" : "endPlayerTurn"
-}, {
-  "command" : "endPlayerTurn"
-}, {
-  "command" : "placeCard",
-  "PlayerIdx" : 0
-}, {
-  "command" : "endPlayerTurn"
-}, {
-  "command" : "placeCard",
-  "PlayerIdx" : 0
-}, {
-  "command" : "endPlayerTurn"
-}, {
   "command" : "getEnvironmentCardsInHand",
   "playerIdx" : 1,
-  "output" : 0
-}, {
-  "command" : "useEnvironmentCard",
-  "handIdx" : 0,
-  "affectedRow" : 1,
-  "error" : "Chosen card is not of type environment."
-}, {
-  "command" : "useEnvironmentCard",
-  "handIdx" : 0,
-  "affectedRow" : 1,
-  "error" : "Chosen card is not of type environment."
-}, {
-  "command" : "endPlayerTurn"
+  "output" : [ {
+    "mana" : 3,
+    "name" : "Firestorm",
+    "description" : "Standard card: The dragon was unleashed, run for your lives.",
+    "colors" : [ "Red", "Yellow" ]
+  } ]
 }, {
   "command" : "getCardAtPosition",
   "x" : 1,
   "y" : 0,
-  "output" : "No card at that position."
+  "output" : {
+    "mana" : 3,
+    "health" : 7,
+    "description" : "Standard card: A warrior who is never afraid of battle, no matter the costs",
+    "name" : "Goliath",
+    "attackDamage" : 2,
+    "colors" : [ "Red", "Purple" ]
+  }
 }, {
   "command" : "getCardAtPosition",
   "x" : 2,
   "y" : 0,
-  "output" : "No card at that position."
-}, {
-  "command" : "endPlayerTurn"
+  "output" : {
+    "mana" : 3,
+    "health" : 7,
+    "description" : "Premium card: No matter how many, his body will fight. Save your breath for the Mountain is strong.",
+    "name" : "Goliath",
+    "attackDamage" : 1,
+    "colors" : [ "Brown", "Black", "Grey" ]
+  }
 }, {
   "command" : "getEnvironmentCardsInHand",
   "playerIdx" : 1,
-  "output" : 0
+  "output" : [ ]
 }, {
   "command" : "getFrozenCardsOnTable",
   "output" : [ ]
@@ -51,43 +42,34 @@
   "command" : "getPlayerTurn",
   "output" : 1
 }, {
-  "command" : "placeCard",
-  "PlayerIdx" : 0
-}, {
   "command" : "getCardAtPosition",
   "x" : 2,
   "y" : 0,
-  "output" : "No card at that position."
+  "output" : {
+    "mana" : 3,
+    "health" : 7,
+    "description" : "Premium card: No matter how many, his body will fight. Save your breath for the Mountain is strong.",
+    "name" : "Goliath",
+    "attackDamage" : 1,
+    "colors" : [ "Brown", "Black", "Grey" ]
+  }
 }, {
   "command" : "getCardAtPosition",
   "x" : 1,
   "y" : 0,
-  "output" : "No card at that position."
-}, {
-  "command" : "endPlayerTurn"
-}, {
-  "command" : "placeCard",
-  "PlayerIdx" : 0
-}, {
-  "command" : "endPlayerTurn"
-}, {
-  "command" : "placeCard",
-  "PlayerIdx" : 0
+  "output" : {
+    "mana" : 3,
+    "health" : 7,
+    "description" : "Standard card: A warrior who is never afraid of battle, no matter the costs",
+    "name" : "Goliath",
+    "attackDamage" : 2,
+    "colors" : [ "Red", "Purple" ]
+  }
 }, {
   "command" : "useEnvironmentCard",
   "handIdx" : 0,
   "affectedRow" : 2,
-  "error" : "Chosen card is not of type environment."
-}, {
-  "command" : "useEnvironmentCard",
-  "handIdx" : 0,
-  "affectedRow" : 2,
-  "error" : "Chosen card is not of type environment."
-}, {
-  "command" : "endPlayerTurn"
-}, {
-  "command" : "placeCard",
-  "PlayerIdx" : 0
+  "error" : "Not enough mana to use environment card."
 }, {
   "command" : "useEnvironmentCard",
   "handIdx" : 0,
@@ -97,172 +79,113 @@
   "command" : "useEnvironmentCard",
   "handIdx" : 0,
   "affectedRow" : 3,
-  "error" : "Chosen card is not of type environment."
-}, {
-  "command" : "endPlayerTurn"
-}, {
-  "command" : "placeCard",
-  "PlayerIdx" : 0
-}, {
-  "command" : "endPlayerTurn"
-}, {
-  "command" : "placeCard",
-  "PlayerIdx" : 0
-}, {
-  "command" : "placeCard",
-  "PlayerIdx" : 0
-}, {
-  "command" : "endPlayerTurn"
-}, {
-  "command" : "placeCard",
-  "PlayerIdx" : 0
-}, {
-  "command" : "useEnvironmentCard",
-  "handIdx" : 0,
-  "affectedRow" : 3,
-  "error" : "Chosen card is not of type environment."
-}, {
-  "command" : "useEnvironmentCard",
-  "handIdx" : 0,
-  "affectedRow" : 3,
-  "error" : "Chosen card is not of type environment."
-}, {
-  "command" : "useEnvironmentCard",
-  "handIdx" : 0,
-  "affectedRow" : 1,
-  "error" : "Chosen card is not of type environment."
-}, {
-  "command" : "useEnvironmentCard",
-  "handIdx" : 0,
-  "affectedRow" : 1,
-  "error" : "Chosen card is not of type environment."
-}, {
-  "command" : "endPlayerTurn"
+  "error" : "Chosen row does not belong to the enemy."
 }, {
   "command" : "useEnvironmentCard",
   "handIdx" : 0,
   "affectedRow" : 2,
-  "error" : "Chosen card is not of type environment."
-}, {
-  "command" : "useEnvironmentCard",
-  "handIdx" : 0,
-  "affectedRow" : 2,
-  "error" : "Chosen card is not of type environment."
-}, {
-  "command" : "endPlayerTurn"
-}, {
-  "command" : "endPlayerTurn"
-}, {
-  "command" : "endPlayerTurn"
+  "error" : "Cannot steal enemy card since the player's row is full."
 }, {
   "command" : "getPlayerMana",
-  "output" : 41
+  "playerIdx" : 1,
+  "output" : 17
 }, {
   "command" : "getPlayerMana",
-  "output" : 43
+  "playerIdx" : 2,
+  "output" : 25
 }, {
   "command" : "getCardsOnTable",
-  "output" : [ ]
-}, {
-  "command" : "getCardsInHand",
-  "output" : [ {
+  "output" : [ [ ], [ {
     "mana" : 3,
-    "health" : 8,
+    "health" : 6,
+    "description" : "Standard card: A warrior who is never afraid of battle, no matter the costs",
+    "name" : "Goliath",
+    "attackDamage" : 2,
+    "colors" : [ "Red", "Purple" ]
+  }, {
+    "mana" : 5,
+    "health" : 3,
+    "description" : "Standard card: When he is near, close your eyes. They betray your mind.",
+    "name" : "Miraj",
+    "attackDamage" : 5,
+    "colors" : [ "Yellow", "Orange", "Red" ]
+  }, {
+    "mana" : 5,
+    "health" : 2,
+    "description" : "Standard card: When he is near, close your eyes. They betray your mind.",
+    "name" : "Miraj",
+    "attackDamage" : 5,
+    "colors" : [ "Yellow", "Orange", "Red" ]
+  }, {
+    "mana" : 4,
+    "health" : 3,
+    "description" : "Premium card: Insanity is always an option, now it is an absolute.",
+    "name" : "Miraj",
+    "attackDamage" : 5,
+    "colors" : [ "Red", "Black" ]
+  }, {
+    "mana" : 3,
+    "health" : 5,
+    "description" : "Standard card: He has seen everything, his mind has never been asleep since the making of the realm.",
+    "name" : "Warden",
+    "attackDamage" : 3,
+    "colors" : [ "Brown", "Blue" ]
+  } ], [ {
+    "mana" : 3,
+    "health" : 7,
     "description" : "Premium card: No matter how many, his body will fight. Save your breath for the Mountain is strong.",
     "name" : "Goliath",
     "attackDamage" : 1,
     "colors" : [ "Brown", "Black", "Grey" ]
   }, {
-    "mana" : 3,
-    "health" : 6,
-    "description" : "Premium card: You shall not pass, you shall not prevail, you shall perish.",
-    "name" : "Warden",
-    "attackDamage" : 2,
-    "colors" : [ "Brown", "Blue" ]
+    "mana" : 4,
+    "health" : 4,
+    "description" : "Premium card: Insanity is always an option, now it is an absolute.",
+    "name" : "Miraj",
+    "attackDamage" : 5,
+    "colors" : [ "Yellow", "Orange", "Red" ]
   }, {
-    "mana" : 3,
+    "mana" : 5,
+    "health" : 3,
+    "description" : "Premium card: Insanity is always an option, now it is an absolute.",
+    "name" : "Miraj",
+    "attackDamage" : 5,
+    "colors" : [ "Red", "Black" ]
+  }, {
+    "mana" : 4,
     "health" : 4,
     "description" : "Premium card: Ravished by the winds of hell, no soul is to be forgiven.",
     "name" : "The Ripper",
     "attackDamage" : 5,
     "colors" : [ "Orange", "Red", "Black" ]
   }, {
-    "mana" : 4,
-    "health" : 7,
-    "description" : "Premium card: No matter how many, his body will fight. Save your breath for the Mountain is strong.",
-    "name" : "Goliath",
-    "attackDamage" : 1,
-    "colors" : [ "Brown", "Black", "Grey" ]
-  }, {
-    "mana" : 4,
-    "health" : 8,
-    "description" : "Standard card: A warrior who is never afraid of battle, no matter the costs",
-    "name" : "Goliath",
-    "attackDamage" : 1,
-    "colors" : [ "Brown", "Black", "Grey" ]
-  }, {
-    "mana" : 3,
-    "health" : 7,
-    "description" : "Premium card: No matter how many, his body will fight. Save your breath for the Mountain is strong.",
-    "name" : "Goliath",
-    "attackDamage" : 1,
-    "colors" : [ "Red", "Purple" ]
-  }, {
-    "mana" : 2,
-    "name" : "Winterfell",
-    "description" : "Standard card: The days are cold and so are we. We hope we can close our eyes again.",
-    "colors" : [ "White", "Grey", "Black" ]
-  }, {
     "mana" : 5,
-    "health" : 3,
+    "health" : 4,
     "description" : "Premium card: Insanity is always an option, now it is an absolute.",
     "name" : "Miraj",
     "attackDamage" : 4,
-    "colors" : [ "Red", "Black" ]
-  }, {
+    "colors" : [ "Yellow", "Orange", "Red" ]
+  } ], [ ] ]
+}, {
+  "command" : "getCardsInHand",
+  "playerIdx" : 1,
+  "output" : [ {
     "mana" : 1,
     "name" : "Heart Hound",
-    "description" : "Standard card: Corruption is easy, you always wanted it, now I help you embrace it.",
+    "description" : "Premium card: Your mind is ours. Your body is ours. Stop begging.",
     "colors" : [ "Green", "Black" ]
+  }, {
+    "mana" : 3,
+    "health" : 5,
+    "description" : "Standard card: He has seen everything, his mind has never been asleep since the making of the realm.",
+    "name" : "Warden",
+    "attackDamage" : 2,
+    "colors" : [ "Brown", "Blue" ]
   } ]
 }, {
   "command" : "getCardsInHand",
+  "playerIdx" : 2,
   "output" : [ {
-    "mana" : 5,
-    "health" : 3,
-    "description" : "Standard card: When he is near, close your eyes. They betray your mind.",
-    "name" : "Miraj",
-    "attackDamage" : 5,
-    "colors" : [ "Yellow", "Orange", "Red" ]
-  }, {
-    "mana" : 3,
-    "health" : 8,
-    "description" : "Standard card: A warrior who is never afraid of battle, no matter the costs",
-    "name" : "Goliath",
-    "attackDamage" : 2,
-    "colors" : [ "Red", "Purple" ]
-  }, {
-    "mana" : 4,
-    "health" : 4,
-    "description" : "Premium card: Insanity is always an option, now it is an absolute.",
-    "name" : "Miraj",
-    "attackDamage" : 5,
-    "colors" : [ "Red", "Black" ]
-  }, {
-    "mana" : 5,
-    "health" : 4,
-    "description" : "Standard card: When he is near, close your eyes. They betray your mind.",
-    "name" : "Miraj",
-    "attackDamage" : 5,
-    "colors" : [ "Yellow", "Orange", "Red" ]
-  }, {
-    "mana" : 3,
-    "health" : 6,
-    "description" : "Standard card: He has seen everything, his mind has never been asleep since the making of the realm.",
-    "name" : "Warden",
-    "attackDamage" : 3,
-    "colors" : [ "Brown", "Blue" ]
-  }, {
     "mana" : 2,
     "name" : "Heart Hound",
     "description" : "Premium card: Your mind is ours. Your body is ours. Stop begging.",

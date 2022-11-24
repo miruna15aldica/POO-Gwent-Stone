@@ -1,8 +1,5 @@
 package main;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-
 import java.util.ArrayList;
 
 public class Game {
@@ -17,7 +14,9 @@ public class Game {
 
     // protected Row row;
 
-    public Game( Player[] players, int deckFirstIdx, int deckSecondIdx, Hero firstHeroCard, Hero secondHeroCard, int shuffleSeed, int firstPlayer) {
+    public Game(final Player[] players, final int deckFirstIdx, final int deckSecondIdx,
+                 final Hero firstHeroCard, final Hero secondHeroCard, final int shuffleSeed,
+                final int firstPlayer) {
         this.players = players;
         this.players[0].remake(deckFirstIdx, shuffleSeed, firstHeroCard);
         this.players[1].remake(deckSecondIdx, shuffleSeed, secondHeroCard);
@@ -30,18 +29,26 @@ public class Game {
         this.end = false;
     }
 
-    public Table getTable() {
+    public final Table getTable() {
         return table;
     }
 
-    public void setTable(Table table) {
+    public final void setTable(final Table table) {
         this.table = table;
     }
 
+    /**
+     *
+     * @return
+     */
     public Player currentPlayer() {
         return players[currentTurn];
     }
 
+    /**
+     *
+     * @return
+     */
     public Player nextPlayer() {
         if (currentTurn == 0) {
             return players[1];
@@ -50,24 +57,35 @@ public class Game {
         }
     }
 
+    /**
+     *
+     */
     public void endCurrentTurn() {
-        // functie care sfarseste jocul;
-        for(int i = 0; i < table.getTable().length; ++i) {
+        // functie care sfarseste jocul nostru
+        for (int i = 0; i < table.getTable().length; ++i) {
             if (isPlayersRow(i, currentTurn)) {
-                for(Card card : table.getTable()[i]) {
-                    if(card != null)
-                        ((Minion)card).unfreeze();
+                for (Card card : table.getTable()[i]) {
+                    if (card != null) {
+                        ((Minion) card).unfreeze();
+                    }
                 }
             }
         }
         currentTurn = (currentTurn == 0) ? 1 : 0;
-        if (currentTurn == firstPlayer)
+        if (currentTurn == firstPlayer) {
             this.beginNewRound();
+        }
     }
 
-    public void beginNewRound() {
+    /**
+     *
+     */
+    public final void beginNewRound() {
+        // functie pentru setarea proprietatilor cartilor
+        // la inceput de runda
         currentRound++;
-        final int addMana = (currentRound > 10) ? 10 : currentRound;
+        final int maxmanaadd = 10;
+        final int addMana = (currentRound > maxmanaadd) ? maxmanaadd : currentRound;
         for (int i = 0; i < players.length; ++i) {
             players[i].setMana(players[i].getMana() + addMana);
             players[i].drawCardFromDeck();
@@ -76,29 +94,44 @@ public class Game {
         for (Card[] row : table.getTable()) {
             for (Card card : row) {
                 if (card != null) {
-                    ((Minion)card).setSpecial(false);
-                    ((Minion)card).setAttacked(false);
+                    ((Minion) card).setSpecial(false);
+                    ((Minion) card).setAttacked(false);
                 }
             }
         }
     }
 
-    public boolean isPlayersRow(int row, Player player) {
-        // TODO - modifici! - DONE
-        return (player == players[0] && row <= 1) || (player == players[1] && row >= 2 );
+    /**
+     *
+     * @param row
+     * @param player
+     * @return
+     */
+    public boolean isPlayersRow(final int row, final Player player) {
+        return (player == players[0] && row <= 1) || (player == players[1] && row >= 2);
     }
-    public Boolean isPlayersRow(int row, int playerIdx) {
+
+    /**
+     *
+     * @param row
+     * @param playerIdx
+     * @return
+     */
+    public final Boolean isPlayersRow(final int row, final int playerIdx) {
         return isPlayersRow(row, players[playerIdx]);
     }
 
-    public Boolean placeCard(int row, Minion card) {
-        // Aici vei avea buguri - succes!
-        // TODO - Flow in ratiune
-        // - De ce e int? Pentru ca ai doar 0 si 1, deci de ce e int?
-        // - Ar fi logic sa iti returneze adevarat in momentul in care tu ai reusit sa faci actiunea
-        //   <=> aka ai pus cartea jos <=> aka invers returnurile
-        for(int i = 0; i < table.getTable()[row].length; i++) {
-            if(table.getTable()[row][i] == null) {
+    /**
+     *
+     * @param row
+     * @param card
+     * @return
+     */
+    public Boolean placeCard(final int row, final Minion card) {
+        // plaseaza cartea de tip minion pe randul
+        // dorit daca mai exista spatiul necesar
+        for (int i = 0; i < table.getTable()[row].length; i++) {
+            if (table.getTable()[row][i] == null) {
                 table.getTable()[row][i] = card;
                 return true;
                 // daca am reusit sa pozitionam cartea pe randul dorit, returnam true
@@ -107,11 +140,16 @@ public class Game {
         return false;
         // daca NU am reusit sa pozitionam cartea pe randul dorit returnam false
     }
+
+    /**
+     *
+     * @return
+     */
     public Boolean hasTankTheEnemy() {
-        for(int i = 0; i < table.getTable().length; ++i) {
-            if(isPlayersRow(i, nextPlayer())) {
-                for(Card card : table.getTable()[i]) {
-                    if(card != null && ((Minion)card).isTank()) {
+        for (int i = 0; i < table.getTable().length; ++i) {
+            if (isPlayersRow(i, nextPlayer())) {
+                for (Card card : table.getTable()[i]) {
+                    if (card != null && ((Minion) card).isTank()) {
                         return true;
                     }
                 }
@@ -120,24 +158,34 @@ public class Game {
         return false;
     }
 
-    public Boolean rowIsFull(int mirror_row) {
-        for(int i = 0; i < table.getTable()[mirror_row].length; i++) {
-            if(table.getTable()[mirror_row][i] == null) {
+    /**
+     *
+     * @param mirror_row
+     * @return
+     */
+    public Boolean rowIsFull(final int mirrorrow) {
+        // verificam daca un rand e plin
+        for (int i = 0; i < table.getTable()[mirrorrow].length; i++) {
+            if (table.getTable()[mirrorrow][i] == null) {
                 return false;
             }
         }
         return true;
     }
 
-public Boolean gameOver() {
+    /**
+     *
+     * @return
+     */
+    public final Boolean gameOver() {
     if (!end) {
         // jocul se termina cand health-ul unei carti hero a unui jucator este 0
-        if(players[0].getHero().getHealth() <= 0 || players[1].getHero().getHealth() <= 0) {
+        if (players[0].getHero().getHealth() <= 0 || players[1].getHero().getHealth() <= 0) {
             end = true;
-            if(players[0].getHero().getHealth() > 0) {
+            if (players[0].getHero().getHealth() > 0) {
                 players[0].raiseNumberVictory();
             }
-            if(players[1].getHero().getHealth() > 0) {
+            if (players[1].getHero().getHealth() > 0) {
                 players[1].raiseNumberVictory();
             }
         }
@@ -145,28 +193,33 @@ public Boolean gameOver() {
     return end;
 }
 
-    public void rebuildTable() {
+    /**
+     *
+     */
+    public final void rebuildTable() {
         int a = 0;
+        final int magic1 = 4;
+        final int magic2 = 5;
         ArrayList<Minion> cards = null;
-        for(int i = 0; i < 4; i++) {
-            for(int j = 0; j < 5; j++) {
-                if(table.getTable()[i][j] != null && ((Minion) table.getTable()[i][j]).getHealth() <= 0) {
+        for (int i = 0; i < magic1; i++) {
+            for (int j = 0; j < magic2; j++) {
+                if (table.getTable()[i][j] != null
+                       && ((Minion) table.getTable()[i][j]).getHealth() <= 0) {
                     table.getTable()[i][j] = null;
                 }
-                if(table.getTable()[i][j] != null && ((Minion) table.getTable()[i][j]).getHealth() > 0) {
+                if (table.getTable()[i][j] != null
+                       && ((Minion) table.getTable()[i][j]).getHealth() > 0) {
                     cards.set(a, ((Minion) table.getTable()[i][j]));
                     a++;
-                    // ideea principala e ca am retinut intr-o alta lista pe moment ceea ce am eliminat
                 }
-                // in momentul in care o carte de genul se elimina, cartile se
-                // shifteaza si ele, adica se duc mai in spate
-                // TODO
             }
-            for(int q = 0; q < a; q++) {
-                table.getTable()[q/ 5][q % 5] = cards.get(q);
+            final int maxrow = 5;
+            final int maxnumbercards = 20;
+            for (int q = 0; q < a; q++) {
+                table.getTable()[q / maxrow][q % maxrow] = cards.get(q);
             }
-            for(int q = a; q < 20; q++) {
-                table.getTable()[q / 5][q % 5] = null;
+            for (int q = a; q < maxnumbercards; q++) {
+                table.getTable()[q / maxrow][q % maxrow] = null;
             }
 
         }

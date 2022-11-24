@@ -1,30 +1,25 @@
 package main;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import java.util.ArrayList;
 
 public class Disciple extends Minion {
-    public Disciple(int mana, String description, ArrayList<String> colors, int health) {
-        super(mana, description, colors, "Disciple", 1, health, 0, false, false, true,
-                true, true, false );
-        // abilitatea o fac in cadrul clasei - God's Plan: +2 viață pentru un minion din tabăra lui.
+    public Disciple(final int mana, final String description,
+                    final ArrayList<String> colors, final int health) {
+        super(mana, description, colors, "Disciple",
+                1, health, 0, false, false, true,
+                true, true, false);
     }
 
     @Override
-    void specialAbility(Minion minion) {
+    public final void specialAbility(final Minion minion) {
+        // abilitatea o fac in cadrul clasei - God's Plan:
+        // +2 viață pentru un minion din tabăra lui.
         minion.health = minion.health + 2;
         this.special = true;
     }
 
-
-//    public ObjectNode cardTransformToAnObjectNode(ObjectMapper objectMapper) {
-//        return null;
-//    }
-
     @Override
-    public Card copy() {
+    public final Card copy() {
         return new Disciple(mana, description, colors, health);
     }
 

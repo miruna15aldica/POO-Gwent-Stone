@@ -2,24 +2,30 @@ package main;
 
 import java.util.ArrayList;
 
-public class General extends Hero{
-    public General(int mana, String description, ArrayList<String> colors) {
+public class General extends Hero {
+    public General(final int mana, final String description, final ArrayList<String> colors) {
         super(mana, description, colors, "General Kocioraw", true, false);
-        // Blood Thirst: +1 atac pentru toate cărțile de pe rând.
     }
 
+    /**
+     *
+     * @param table
+     * @param row
+     */
     @Override
-    void specialAbility(Table table, int row) {
+    final void specialAbility(final Table table, final int row) {
+        // Blood Thirst: +1 atac pentru toate cărțile de pe rând.
         this.special = true;
-        for(int i = 0; i < table.getTable()[row].length; ++i) {
+        for (int i = 0; i < table.getTable()[row].length; ++i) {
             Minion minion = (Minion) table.getTable()[row][i];
-            if (minion != null)
+            if (minion != null) {
                 minion.attackDamage = minion.attackDamage + 1;
+            }
         }
     }
 
     @Override
-    public Card copy() {
+    public final Card copy() {
         return new General(mana, description, colors);
     }
 }

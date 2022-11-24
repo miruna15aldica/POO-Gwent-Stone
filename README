@@ -1,0 +1,71 @@
+#Copyright 2022 Aldica Maria-Miruna
+
+===Detalii legate de structura claselor===
+    Programul de fata implementeaza un joc de carti, unde
+fiecare carte are proprietati, atribute si abilitati diferite.
+Pentru fiecare tip diferit de carte am implementat o clasa
+care extinde tipul principal al cartii (din Card in Minion, Environment,
+Hero, iar din cele 3 in toate celelte tipuri noi de carti (ex Miraj).
+    In clasa Table am considerat masa de joc pe care asezam cartile din
+joc de tip Minion, Deck reprezinta pachetul efectiv de carti, Player contine
+informatiile despre cei 2 jucatori in parte, ce vor fi disponibile de indata
+ce vor fi datele citite din otput, Game este implementarea
+jocului efectiv, care contine si informatii legate de statutul curent
+al cartilor inainte de prelucarea acestora conform comenzilor avute.
+    InputLoader este clasa in care realizam citirea
+datelor din fisierele JSON si unde tratam fiecare comanda de
+debugging/interpretting in mod separat, precum si unde realizam outputul
+testelor finale.
+    Am diferentiat tipurile de carte prin cardType si am considerat pentru
+cartile de tip Minion (cardType = 1), Environment (cardType = 2), iar Hero
+(cardType = 3).
+
+===FUNCTII IMPORTANTE===
+Am selectat cateva dintre functiile pe care le consider  foarte importante
+pentru functionalitatea codului si care necesita o descriere amanuntita:
+
+- cardTransformToAnObjectNode - functie care transforma o carte intr-un obiect
+de tip JSON, il afiseaza; este o functie abstracta si fiecare dintre clasele
+Minion, Environment, Hero il extinde in mod diferit (in functie de clasa,
+afiseaza atribute cum ar fi health, mana, colors, etc)
+
+- specialAbility - functie ce apare in toate dintre clasele Minion, Environment,
+Hero si o suprascrie in functie de abilitatea speciala a fiecarei carti in
+parte
+
+- shuffle - functie din cadrul Deck ce realizeaza amestecul cartlor din pachet
+
+- deckTransformToArrayNode - functie din cadrul Deck ce transforma un
+pachet intr-un obiect de tip array
+
+- currentPlayer - functie din cadrul lui Game ce returneaza jucatorul curent
+
+- endCurrentTurn - functie din cadrul lui Game ce sfarseste jocul, parcurge
+tabla de carti, iar daca gaseste cartea, ii da unfreeze, apoi apeleaza
+beginNewRound
+
+- beginNewRound - adauga mana corespunzatoare partidei jucate,
+precum seteaza cartile astfel incat sa se respecte regulamentul
+impus de inceperea unei noi runde
+
+- gameOver - cand health-ul unei carti de tip Hero este 0, jocul ia sfarsit;
+in cadrul acestei functii stabilim castigatorul si ii crestem cu 1
+numarul de victorii
+
+- rebuidTable - in urma eliminarii unei carti, refacem asezarea celor ramase pe
+tabla de joc
+
+- getCardsInHand - functie din cadrul clasei Player, ce face posibila selectarea
+in "mana jucatorului" a unei carti dorite
+
+- run - functie din cadrul InputLoader ce ruleaza comenzile provenite din
+fisierele JSON si le interpreteaza
+
+- toCard - functie din cadrul clasei CardInput ce returneaza proprietatile
+ fiecarei carti in parte ce se cere a fi afisata
+
+
+
+
+
+

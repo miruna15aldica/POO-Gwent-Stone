@@ -84,36 +84,40 @@ public final class CardInput {
                 + '}';
     }
 
+    /**
+     *
+     * @return
+     */
     public Card toCard() {
-        if(name.equals("Warden")) {
+        if (name.equals("Warden")) {
             return new Warden(mana, description, colors, health, attackDamage);
-        } else if(name.equals("The Ripper")) {
+        } else if (name.equals("The Ripper")) {
             return new Ripper(mana, description, colors, health, attackDamage);
-        } else if(name.equals("The Cursed One")) {
+        } else if (name.equals("The Cursed One")) {
             return new Cursed(mana, description, colors, health);
-        } else if(name.equals("Miraj")) {
+        } else if (name.equals("Miraj")) {
             return new Miraj(mana, description, colors, health, attackDamage);
-        } else if(name.equals("Goliath")) {
+        } else if (name.equals("Goliath")) {
             return new Goliath(mana, description, colors, health, attackDamage);
-        } else if(name.equals("Sentinel")) {
+        } else if (name.equals("Sentinel")) {
             return  new Sentinel(mana, description, colors, health, attackDamage);
-        } else if(name.equals("Berserker")) {
+        } else if (name.equals("Berserker")) {
             return  new Berserker(mana, description, colors, health, attackDamage);
-        } else if(name.equals("Disciple")) {
+        } else if (name.equals("Disciple")) {
             return new Disciple(mana, description, colors, health);
-        } else if(name.equals("Heart Hound")) {
+        } else if (name.equals("Heart Hound")) {
             return new Heart(mana, description, colors);
-        } else if(name.equals("Firestorm")) {
+        } else if (name.equals("Firestorm")) {
             return new Firestorm(mana, description, colors);
-        } else if(name.equals("Winterfell")) {
+        } else if (name.equals("Winterfell")) {
             return new Winterfell(mana, description, colors);
-        } else if(name.equals("General Kocioraw")) {
+        } else if (name.equals("General Kocioraw")) {
             return  new General(mana, description, colors);
-        } else if(name.equals("Empress Thorina")) {
+        } else if (name.equals("Empress Thorina")) {
             return new Empress(mana, description, colors);
-        } else if(name.equals("Lord Royce")) {
+        } else if (name.equals("Lord Royce")) {
             return new Lord(mana, description, colors);
-        } else if(name.equals("King Mudface")) {
+        } else if (name.equals("King Mudface")) {
             return new King(mana, description, colors);
         }
         return null;
