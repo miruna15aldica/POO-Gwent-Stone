@@ -51,4 +51,5 @@ public abstract class Card {
 //        return cardsName;
 //    }
 
+    public abstract Card copy();
 }

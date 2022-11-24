@@ -28,8 +28,9 @@ public final class Test {
         if (inputDir != null) {
             Arrays.sort(inputDir);
 
-            Scanner scanner = new Scanner(System.in);
-            String fileName = scanner.next();
+            // Scanner scanner = new Scanner(System.in);
+            String fileName = "test18_big_game"; // scanner.next();
+            fileName += ".json";
             for (File file : inputDir) {
                 if (file.getName().equalsIgnoreCase(fileName)) {
                     Main.action(file.getName(), CheckerConstants.OUT_FILE);

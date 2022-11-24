@@ -20,4 +20,8 @@ public class Miraj extends Minion{
         this.special = true;
     }
 
+    @Override
+    public Card copy() {
+        return new Miraj(mana, description, colors, health, attackDamage);
+    }
 }

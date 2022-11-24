@@ -56,4 +56,6 @@ public abstract class Hero extends Card{
     public int getHealth() {
         return health;
     }
+
+    public abstract Card copy();
 }

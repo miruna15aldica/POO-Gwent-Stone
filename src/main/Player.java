@@ -55,14 +55,13 @@ public class Player {
         return this.win;
     }
 
-    public int currentCardsEnvironment(ObjectMapper objectMapper) { // ??????????
+    public ArrayNode currentCardsEnvironment(ObjectMapper objectMapper) { // ??????????
         // Aici trebuie facuta afisare - TODO
-        int a = 0;
-        for(Card card : currentCards)
-            if(card.cardType == 2) {
-                a++;
-            }
-        return a;
+        ArrayNode cardsInHand = objectMapper.createArrayNode();
+        for (Card card : currentCards)
+            if (card.getCardType() == 2)
+                cardsInHand.add(card.cardTransformToAnObjectNode(objectMapper));
+        return cardsInHand;
     }
     public void raiseNumberVictory() {
         this.win += 1;
@@ -85,12 +84,15 @@ public class Player {
     }
 
     public void dropCardFromHand(int handIdx) {
+        mana -= currentCards.get(handIdx).getMana();
         currentCards.remove(handIdx);
     }
 
     public void drawCardFromDeck() {
         Card drawnCard = currentDeck.drawCard();
-        currentCards.add(drawnCard);
+        if (drawnCard != null) {
+            currentCards.add(drawnCard);
+        }
     }
 
 

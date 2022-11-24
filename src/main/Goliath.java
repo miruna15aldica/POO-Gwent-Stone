@@ -12,4 +12,9 @@ public class Goliath extends Minion {
     void specialAbility(Minion minion) {
 
     }
+
+    @Override
+    public Card copy() {
+        return new Goliath(mana, description, colors, health, attackDamage);
+    }
 }

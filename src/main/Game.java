@@ -7,10 +7,9 @@ import java.util.ArrayList;
 
 public class Game {
     protected Player[] players;
-    protected ArrayList<Deck> decks;
     protected int mana;
     protected int currentTurn;
-    protected int firstPlayer;
+    protected final int firstPlayer;
     protected int currentRound;
 
     protected Table table;
@@ -53,11 +52,14 @@ public class Game {
 
     public void endCurrentTurn() {
         // functie care sfarseste jocul;
-        for(Card[] row : table.getTable() )
-            for(Card card : row ) {
-                if(card != null)
-                    ((Minion)card).unfreeze();
+        for(int i = 0; i < table.getTable().length; ++i) {
+            if (isPlayersRow(i, currentTurn)) {
+                for(Card card : table.getTable()[i]) {
+                    if(card != null)
+                        ((Minion)card).unfreeze();
+                }
             }
+        }
         currentTurn = (currentTurn == 0) ? 1 : 0;
         if (currentTurn == firstPlayer)
             this.beginNewRound();
@@ -109,7 +111,7 @@ public class Game {
         for(int i = 0; i < table.getTable().length; ++i) {
             if(isPlayersRow(i, nextPlayer())) {
                 for(Card card : table.getTable()[i]) {
-                    if(((Minion)card).isTank()) {
+                    if(card != null && ((Minion)card).isTank()) {
                         return true;
                     }
                 }
@@ -120,7 +122,7 @@ public class Game {
 
     public Boolean rowIsFull(int mirror_row) {
         for(int i = 0; i < table.getTable()[mirror_row].length; i++) {
-            if(table.getTable()[mirror_row][i] != null) {
+            if(table.getTable()[mirror_row][i] == null) {
                 return false;
             }
         }
@@ -128,20 +130,19 @@ public class Game {
     }
 
 public Boolean gameOver() {
-    if (end == true) {
+    if (!end) {
         // jocul se termina cand health-ul unei carti hero a unui jucator este 0
         if(players[0].getHero().getHealth() <= 0 || players[1].getHero().getHealth() <= 0) {
+            end = true;
             if(players[0].getHero().getHealth() > 0) {
                 players[0].raiseNumberVictory();
             }
             if(players[1].getHero().getHealth() > 0) {
                 players[1].raiseNumberVictory();
             }
-            return true;
         }
-
     }
-    return false;
+    return end;
 }
 
     public void rebuildTable() {

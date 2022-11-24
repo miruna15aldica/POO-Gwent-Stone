@@ -16,5 +16,8 @@ public class Warden extends Minion {
 
     }
 
-
+    @Override
+    public Card copy() {
+        return new Warden(mana, description, colors, health, attackDamage);
+    }
 }

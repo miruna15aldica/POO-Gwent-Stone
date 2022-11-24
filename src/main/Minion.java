@@ -8,9 +8,7 @@ import java.util.ArrayList;
 
 public abstract class Minion extends Card{
     // cardType = 1;
-    protected boolean isOnFirstRow;
     //protected int hasTank;
-    protected boolean isOnLastRow;
     protected int cardType;
     protected int health;
     protected int attackDamage;
@@ -120,4 +118,6 @@ public abstract class Minion extends Card{
     public Boolean getAttacked() {
         return attacked;
     }
+
+    public abstract Card copy();
 }

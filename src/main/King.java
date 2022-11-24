@@ -13,7 +13,13 @@ public class King extends Hero{
         this.special = true;
         for(int i = 0; i < table.getTable()[row].length; ++i) {
             Minion minion = (Minion) table.getTable()[row][i];
-            minion.health = minion.health + 1;
+            if (minion != null)
+                minion.health = minion.health + 1;
         }
+    }
+
+    @Override
+    public Card copy() {
+        return new King(mana, description, colors);
     }
 }

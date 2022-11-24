@@ -5,9 +5,9 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import java.util.ArrayList;
 
-public class Winterfell extends Environment{
+public class Winterfell extends Environment {
     public Winterfell(int mana, String description, ArrayList<String> colors) {
-        super(mana, description, colors, "Winterfell",false, true);
+        super(mana, description, colors, "Winterfell",true, false);
         // abilitatea speciala in clasa - Winterfell
         //Toate cărțile de pe rând stau o tură.
     }
@@ -24,5 +24,8 @@ public class Winterfell extends Environment{
 
     }
 
-
+    @Override
+    public Card copy() {
+        return new Winterfell(mana, description, colors);
+    }
 }

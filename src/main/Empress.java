@@ -15,15 +15,20 @@ public class Empress extends Hero{
             int aux = 0;
             for(int i = 0; i < table.getTable()[row].length; ++i) {
                 Minion minion = (Minion) table.getTable()[row][i];
-                if (aux < minion.health)
+                if (minion != null && aux < minion.health)
                     aux = minion.health;
             }
             for(int i = 0; i < table.getTable()[row].length; ++i) {
                 Minion minion = (Minion) table.getTable()[row][i];
-                if (aux == minion.health) {
+                if (minion != null && aux == minion.health) {
                     minion.health = 0;
                     break;
                 }
             }
+    }
+
+    @Override
+    public Card copy() {
+        return new Empress(mana, description, colors);
     }
 }

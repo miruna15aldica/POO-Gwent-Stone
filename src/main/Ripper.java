@@ -14,8 +14,14 @@ public class Ripper extends Minion{
 
     @Override
     void specialAbility(Minion minion) {
-        int aux = minion.attackDamage;
-        minion.attackDamage = aux - 2;
+        minion.attackDamage -= 2;
+        if (minion.attackDamage < 0)
+            minion.attackDamage = 0;
         this.special = true;
+    }
+
+    @Override
+    public Card copy() {
+        return new Ripper(mana, description, colors, health, attackDamage);
     }
 }

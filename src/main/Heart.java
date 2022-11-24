@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class Heart extends Environment{
     public Heart(int mana, String description, ArrayList<String> colors) {
-        super(mana, description, colors, "Heart Hound", false, true);
+        super(mana, description, colors, "Heart Hound", true, false);
         // abilitatea speciala in cadrul clasei - Heart Hound
         //Se fură minionul adversarului cu cea mai mare viață de pe rând și se pune pe rândul “oglindit” aferent jucătorului.
     }
@@ -32,6 +32,11 @@ public class Heart extends Environment{
 
     }
 
+
+    @Override
+    public Card copy() {
+        return new Heart(mana, description, colors);
+    }
 
 
 }

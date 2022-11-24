@@ -13,8 +13,13 @@ public class General extends Hero{
         this.special = true;
         for(int i = 0; i < table.getTable()[row].length; ++i) {
             Minion minion = (Minion) table.getTable()[row][i];
-            minion.attackDamage = minion.attackDamage + 1;
+            if (minion != null)
+                minion.attackDamage = minion.attackDamage + 1;
         }
+    }
 
+    @Override
+    public Card copy() {
+        return new General(mana, description, colors);
     }
 }

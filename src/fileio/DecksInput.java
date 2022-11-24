@@ -48,13 +48,13 @@ public final class DecksInput {
                 + decks
                 + '}';
     }
-    public ArrayList<Deck> getDeck(int playerIdx) {
+    public ArrayList<Deck> getDecks(int playerIdx) {
         ArrayList<Deck> deckPlayer = new ArrayList<>();
         int deck = 0;
         while(deck < decks.size())
          {
             ArrayList<Card> cards = new ArrayList<>();
-            for(CardInput card : decks.get(playerIdx))
+            for(CardInput card : decks.get(deck))
                 cards.add(card.toCard());
 
             deckPlayer.add(new Deck(deck, playerIdx, cards));

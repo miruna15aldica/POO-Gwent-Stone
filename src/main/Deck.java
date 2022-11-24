@@ -28,7 +28,7 @@ public final class Deck {
 
     public Card drawCard() {
         if (shuffledCards.size() > 0) {
-            Card card = shuffledCards.get(0);
+            Card card = shuffledCards.get(0).copy();
             shuffledCards.remove(0);
             return card;
         }

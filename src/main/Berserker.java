@@ -16,4 +16,8 @@ public class Berserker extends Minion {
 
     }
 
+    @Override
+    public Card copy() {
+        return new Berserker(mana, description, colors, health, attackDamage);
+    }
 }

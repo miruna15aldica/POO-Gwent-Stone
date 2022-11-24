@@ -24,8 +24,8 @@ public class InputLoader {
         outputArray = objectMapper.createArrayNode();
 
         // TODO
-        players[0] = new Player(0, input.getPlayerOneDecks().getDeck(0));
-        players[1] = new Player(1, input.getPlayerTwoDecks().getDeck(1));
+        players[0] = new Player(0, input.getPlayerOneDecks().getDecks(0));
+        players[1] = new Player(1, input.getPlayerTwoDecks().getDecks(1));
     }
 
     // pentru 2 carti cu coordonatele randurilor date
@@ -46,20 +46,21 @@ public class InputLoader {
         } else if (actionsInput.getCommand().equals("getPlayerTwoWins")) {
             objectNode.put("output", players[1].numberOfWins());
         } else if (actionsInput.getCommand().equals("getTotalGamesPlayed")) {
-            objectNode.put("output", this.currGame + 1);
+            objectNode.put("output", this.currGame);
         } else if (actionsInput.getCommand().equals("getFrozenCardsOnTable")) {
             objectNode.set("output", game.getTable().getFrozenCards(objectMapper));
         } else if (actionsInput.getCommand().equals("getEnvironmentCardsInHand")) {
             objectNode.put("playerIdx", actionsInput.getPlayerIdx());
             objectNode.put("output", players[actionsInput.getPlayerIdx() - 1].currentCardsEnvironment(objectMapper));
         } else if (actionsInput.getCommand().equals("getPlayerMana")) {
+            objectNode.put("playerIdx", actionsInput.getPlayerIdx());
             objectNode.put("output", players[actionsInput.getPlayerIdx() - 1].getMana());
         } else if (actionsInput.getCommand().equals("getCardAtPosition")) {
             objectNode.put("x", actionsInput.getX());
             objectNode.put("y", actionsInput.getY());
             Minion minion = (Minion) game.getTable().getCardAtPosition(actionsInput.getX(), actionsInput.getY());
             if (minion == null)
-                objectNode.put("output", "No card at that position.");
+                objectNode.put("output", "No card available at that position.");
             else
                 objectNode.set("output", minion.cardTransformToAnObjectNode(objectMapper));
         } else if (actionsInput.getCommand().equals("getPlayerHero")) {
@@ -77,7 +78,7 @@ public class InputLoader {
             // TODO - DONE
             objectNode.set("output", players[actionsInput.getPlayerIdx() - 1].getPlayerDeck().deckTransformToArrayNode(objectMapper));
         } else if (actionsInput.getCommand().equals("getCardsInHand")) {
-            objectNode.put("output", actionsInput.getPlayerIdx());
+            objectNode.put("playerIdx", actionsInput.getPlayerIdx());
             objectNode.set("output", players[actionsInput.getPlayerIdx() - 1].getCardsInHand(objectMapper));
             // TODO -
 
@@ -100,7 +101,8 @@ public class InputLoader {
                         System.out.println("Nu a intrat pe niciun fel de comanda: " + actionsInput.getCommand());
                     }
                 }
-                outputArray.add(objectNode);
+                if (objectNode.has("output") || objectNode.has("error") || objectNode.has("gameEnded"))
+                    outputArray.add(objectNode);
             }
         }
     }
@@ -119,84 +121,82 @@ public class InputLoader {
             Card card = game.currentPlayer().cardOnHand(actionsInput.getHandIdx());
             if (card.cardType != 2) {
                 objectNode.put("error", "Chosen card is not of type environment.");
-                output().add(objectNode);
-            } else if (card.getMana() < players[actionsInput.getHandIdx()].getMana()) {
+            } else if (card.getMana() > game.currentPlayer().getMana()) {
                 objectNode.put("error", "Not enough mana to use environment card.");
             } else if (card instanceof Heart) {
-                int x = game.getTable().findCardRow(card);
-                int mirror_row = 3 - x;
+                int mirror_row = 3 - a;
                 if (game.rowIsFull(mirror_row)) {
                     objectNode.put("error", "Cannot steal enemy card since the player's row is full.");
                 }
             } else if (game.currentPlayer() == players[0]) {
-                objectNode.put("error", "Chosen row does not belong to the enemy.");
-                if (a == 2 || a == 3) {
+                if (((a == 2 || a == 3) && ((Environment)card).abilityOnEnemy)
+                    || ((a == 0 || a == 1) && ((Environment)card).abilityOnSelf)) {
                     objectNode.put("error", "Chosen row does not belong to the enemy.");
                 }
 
             } else if (game.currentPlayer() == players[1]) {
-                objectNode.put("error", "Chosen row does not belong to the enemy.");
-                if (a == 0 || a == 1) {
+                if (((a == 0 || a == 1) && ((Environment)card).abilityOnEnemy)
+                        || ((a == 2 || a == 3) && ((Environment)card).abilityOnSelf)) {
                     objectNode.put("error", "Chosen row does not belong to the enemy.");
                 }
-
             }
-            game.currentPlayer().setMana(game.currentPlayer().getMana() - game.mana);
+            if (!objectNode.has("error")) {
+//                game.currentPlayer().setMana(game.currentPlayer().getMana() - card.getMana());
+                ((Environment)card).specialAbility(game.getTable(), 3 - a);
+                game.currentPlayer().dropCardFromHand(actionsInput.getHandIdx());
+            }
+            game.getTable().fillSpaces();
         } else if (actionsInput.getCommand().equals("useHeroAbility")) {
-            objectNode.put("affectdRow", actionsInput.getAffectedRow());
+            objectNode.put("affectedRow", actionsInput.getAffectedRow());
             int row = actionsInput.getAffectedRow();
-            Card card = game.currentPlayer().cardOnHand(actionsInput.getHandIdx());
-            Player player = players[actionsInput.getPlayerIdx()];
-            if (card.mana < player.mana) {
-                objectNode.put("error", "Not enough mana to use environment card.");
+            Hero card = game.currentPlayer().getHero();
+            Player player = game.currentPlayer();
+            if (card.mana > player.mana) {
+                objectNode.put("error", "Not enough mana to use hero's ability.");
             } else if (player.getHero().getSpecial()) {
                 objectNode.put("error", "Hero has already attacked this turn.");
-            } else if (player.getHero() instanceof Lord) {
-                if (onTheSameTeam(actionsInput.getPlayerIdx() + 1, actionsInput.getAffectedRow())) {
-                    objectNode.put("error", "Selected row does not belong to the enemy.");
-                }
-            } else if (player.getHero() instanceof General) {
-                if (!onTheSameTeam(actionsInput.getPlayerIdx() + 1, actionsInput.getAffectedRow())) {
-                    objectNode.put("error", "Selected row does not belong to the current player.");
-                }
-            } else if (player.getHero() instanceof King) {
-                if (!onTheSameTeam(actionsInput.getPlayerIdx() + 1, actionsInput.getAffectedRow())) {
-                    objectNode.put("error", "Selected row does not belong to the current player.");
-                }
+            } else if (!player.getHero().abilityOnEnemy && onTheSameTeam(game.currentTurn + 1, actionsInput.getAffectedRow())) {
+                objectNode.put("error", "Selected row does not belong to the current player.");
+            } else if (!player.getHero().abilityOnSelf && !onTheSameTeam(game.currentTurn + 1, actionsInput.getAffectedRow())) {
+                objectNode.put("error", "Selected row does not belong to the enemy.");
             } else {
-                ((Hero) card).specialAbility(game.getTable(), row);
+                card.specialAbility(game.getTable(), 3 - row);
+                player.setMana(player.getMana() - card.getMana());
             }
+            game.getTable().fillSpaces();
         } else if (actionsInput.getCommand().equals("useAttackHero")) {
             int attackerX = actionsInput.getCardAttacker().getX();
             int attackerY = actionsInput.getCardAttacker().getY();
-            int attackedX = actionsInput.getCardAttacked().getX();
-            int attackedY = actionsInput.getCardAttacked().getY();
-            Minion attacked = (Minion) game.getTable().getCardAtPosition(attackedX, attackedY);
+            ObjectNode cardAttackerNode = objectMapper.createObjectNode();
+            cardAttackerNode.put("x", attackerX);
+            cardAttackerNode.put("y", attackerY);
+            objectNode.set("cardAttacker", cardAttackerNode);
+            Hero attacked = game.nextPlayer().getHero();
             Minion attacker = (Minion) game.getTable().getCardAtPosition(attackerX, attackerY);
             // gasim cartea care e la pozitia (x, y)
             Hero herocard = game.nextPlayer().getHero();
             // ne trebuie o functie care gaseste urmatorul player, dar care identifica si
             // hero ul fiecarui jucator
-            if (attacked.frozen) {
+            if (attacker.frozen) {
                 objectNode.put("error", "Attacker card is frozen.");
             } else if (attacker.getSpecial() == true) {
                 objectNode.put("error", "Attacker card has already attacked this turn.");
-            } else if (attacked.attacked) {
+            } else if (attacker.attacked) {
                 objectNode.put("error", "Attacker card has already attacked this turn.");
             } else if (game.hasTankTheEnemy()) {
                 objectNode.put("error", "Attacked card is not of type 'Tank'.");
-            } else if (game.gameOver()) {
+            } else {
                 attacker.cardUsesAttack(attacked, game);
-                if (players[0].getHero().health > 0) {
-                    objectNode.put("gameEnded", "Player one killed the enemy hero.");
-                } else {
-                    objectNode.put("gameEnded", "Player two killed the enemy hero.");
+                if (game.gameOver()) {
+                    objectNode.removeAll();
+                    if (players[0].getHero().health > 0) {
+                        objectNode.put("gameEnded", "Player one killed the enemy hero.");
+                    } else {
+                        objectNode.put("gameEnded", "Player two killed the enemy hero.");
+                    }
                 }
             }
-
-
-            // aici e greut, ne gandim si altadata
-
+            game.getTable().fillSpaces();
         }
         else if (actionsInput.getCommand().equals("cardUsesAbility")) {
             int attackerX = actionsInput.getCardAttacker().getX();
@@ -205,34 +205,30 @@ public class InputLoader {
             int attackedX = actionsInput.getCardAttacked().getX();
             int attackedY = actionsInput.getCardAttacked().getY();
             Minion attacked = (Minion) game.getTable().getCardAtPosition(attackedX, attackedY);
-            if (!attacker.frozen) {
+            ObjectNode cardAttackedNode = objectMapper.createObjectNode();
+            cardAttackedNode.put("x", attackedX);
+            cardAttackedNode.put("y", attackedY);
+            ObjectNode cardAttackerNode = objectMapper.createObjectNode();
+            cardAttackerNode.put("x", attackerX);
+            cardAttackerNode.put("y", attackerY);
+            objectNode.set("cardAttacked", cardAttackedNode);
+            objectNode.set("cardAttacker", cardAttackerNode);
+            if (attacker.frozen) {
                 objectNode.put("error", "Attacker card is frozen.");
             } else if (attacker.getSpecial() == true) {
                 objectNode.put("error", "Attacker card has already attacked this turn.");
             } else if (attacker.attacked) {
                 objectNode.put("error", "Attacker card has already attacked this turn.");
-            } else if (attacker instanceof Disciple) {
-                if (!onTheSameTeam(attackerX, attackedX))
-                    objectNode.put("error", "Attacked card does not belong to the current player.");
-                // facem o functie care verifica in functie de rand pe unde sunt
-            } else if (attacker instanceof Ripper) {
-                if (onTheSameTeam(attackerX, attackedX))
-                    objectNode.put("error", "Attacked card does not belong to the enemy.");
-//                // facem o functie care verifica daca exista o carte tank
-//                // facem o functie care verifica in functie de rand pe unde sunt
-            } else if (attacker instanceof Miraj) {
-                if (onTheSameTeam(attackerX, attackedX))
-                    objectNode.put("error", "Attacked card does not belong to the enemy.");
-                // facem o functie care verifica in functie de rand pe unde sunt
-                // facem o functie care verifica daca exista o carte tank
-            } else if (attacker instanceof Cursed) {
-                if (onTheSameTeam(attackerX, attackedX))
-                    objectNode.put("error", "Attacked card does not belong to the enemy.");
-                // facem o functie care verifica in functie de rand pe unde sunt
-            } else if (game.hasTankTheEnemy()) {
+            } else if (!((Minion)attacker).abilityOnEnemy && !onTheSameTeam(attackerX, attackedX)) {
+                objectNode.put("error", "Attacked card does not belong to the current player.");
+            } else if (!((Minion)attacker).abilityOnSelf && onTheSameTeam(attackerX, attackedX)) {
+                objectNode.put("error", "Attacked card does not belong to the enemy.");
+            } else if (game.hasTankTheEnemy() && !attacked.isTank() && !(attacker instanceof Disciple)) {
                 objectNode.put("error", "Attacked card is not of type 'Tank'.");
-            } else {
+            }
+            if (!objectNode.has("error")) {
                 attacker.specialAbility(attacked);
+                game.getTable().fillSpaces();
             }
             // la fel, verifcam pentru celelalte clase si randuri
 
@@ -244,7 +240,15 @@ public class InputLoader {
             int attackedX = actionsInput.getCardAttacked().getX();
             int attackedY = actionsInput.getCardAttacked().getY();
             Minion attacked = (Minion) game.getTable().getCardAtPosition(attackedX, attackedY);
-            if (onTheSameTeam(attackerX, attackerY)) {
+            ObjectNode cardAttackedNode = objectMapper.createObjectNode();
+            cardAttackedNode.put("x", attackedX);
+            cardAttackedNode.put("y", attackedY);
+            ObjectNode cardAttackerNode = objectMapper.createObjectNode();
+            cardAttackerNode.put("x", attackerX);
+            cardAttackerNode.put("y", attackerY);
+            objectNode.set("cardAttacked", cardAttackedNode);
+            objectNode.set("cardAttacker", cardAttackerNode);
+            if (onTheSameTeam(attackerX, attackedX)) {
                 objectNode.put("error", "Attacked card does not belong to the enemy.");
             } else if (attacker.attacked) {
                 objectNode.put("error", "Attacker card has already attacked this turn.");
@@ -257,11 +261,12 @@ public class InputLoader {
 //                        objectNode.put("error", "Attacked card is not of type 'Tank'.");
 //                    return  true;
 //                }
-            } else if (game.hasTankTheEnemy()) {
+            } else if (game.hasTankTheEnemy() && !attacked.isTank()) {
                 objectNode.put("error", "Attacked card is not of type 'Tank'.");
             } else {
                 attacker.cardUsesAttack(attacked, game);
             }
+            game.getTable().fillSpaces();
         }
         else if (actionsInput.getCommand().equals("placeCard")) {
             //game.currentPlayer().cardOnBoard(actionsInput.getHandIdx());
@@ -271,56 +276,69 @@ public class InputLoader {
             Card card = game.currentPlayer().cardOnHand(actionsInput.getHandIdx());
             if (card.cardType == 2) {
                 objectNode.put("error", "Cannot place environment card on table.");
-            } else if (card.getMana() > players[actionsInput.getPlayerIdx()].mana) {
+                objectNode.put("handIdx", actionsInput.getHandIdx());
+            } else if (card.getMana() > game.currentPlayer().mana) {
                 objectNode.put("error", "Not enough mana to place card on table.");
+                objectNode.put("handIdx", actionsInput.getHandIdx());
             }
-            else if (((Minion) (card)).isOnLastRow) {
+            else if (((Minion) (card)).placeOnLastRow) {
+                System.out.println("Here1");
                 // TODO - probabil nu merge!
-                if (game.isPlayersRow(actionsInput.getPlayerIdx(), 0)) {
+                if (game.isPlayersRow(0, game.currentPlayer())) {
 
                     Boolean a = game.placeCard(0, (Minion) card);
                     if (!a) {
                         objectNode.put("error", "Cannot place card on table since row is full.");
+                        objectNode.put("handIdx", actionsInput.getHandIdx());
+                    } else {
+                        game.currentPlayer().dropCardFromHand(actionsInput.getHandIdx());
                     }
                 }
-                if (game.isPlayersRow(actionsInput.getPlayerIdx(), 3)) {
+                if (game.isPlayersRow(3, game.currentPlayer())) {
 
                     Boolean a = game.placeCard(3, (Minion) card);
                     if (!a) {
                         objectNode.put("error", "Cannot place card on table since row is full.");
+                        objectNode.put("handIdx", actionsInput.getHandIdx());
+                    } else {
+                        game.currentPlayer().dropCardFromHand(actionsInput.getHandIdx());
                     }
                 }
-
-
-            } else if (((Minion) (card)).isOnFirstRow) {
+            } else if (((Minion) (card)).placeOnFirstRow) {
                 // TODO - probabil nu merge!
-                if (game.isPlayersRow(actionsInput.getPlayerIdx(), 0)) {
+                System.out.println("Here2");
+                if (game.isPlayersRow(1, game.currentPlayer())) {
 
                     Boolean a = game.placeCard(1, (Minion) card);
                     if (!a) {
                         objectNode.put("error", "Cannot place card on table since row is full.");
+                        objectNode.put("handIdx", actionsInput.getHandIdx());
+                    } else {
+                        game.currentPlayer().dropCardFromHand(actionsInput.getHandIdx());
                     }
                 }
-                if (game.isPlayersRow(actionsInput.getPlayerIdx(), 3)) {
+                if (game.isPlayersRow(2, game.currentPlayer())) {
 
                     Boolean a = game.placeCard(2, (Minion) card);
                     if (!a) {
                         objectNode.put("error", "Cannot place card on table since row is full.");
+                        objectNode.put("handIdx", actionsInput.getHandIdx());
+                    } else {
+                        game.currentPlayer().dropCardFromHand(actionsInput.getHandIdx());
                     }
                 }
             } else {
                 objectNode.put("PlayerIdx", actionsInput.getPlayerIdx());
                 game.rebuildTable();
             }
-
-        } else
-        if(actionsInput.getCommand().equals("endPlayerTurn"))
+        } else if(actionsInput.getCommand().equals("endPlayerTurn")) {
             game.endCurrentTurn();
-        else {
-            return true;
+        } else {
+            return false;
         }
-
-        return false;
+        if (!objectNode.has("error") && !objectNode.has("gameEnded"))
+            objectNode.removeAll();
+        return true;
     }
 }
 

@@ -23,4 +23,9 @@ public class Disciple extends Minion {
 //        return null;
 //    }
 
+    @Override
+    public Card copy() {
+        return new Disciple(mana, description, colors, health);
+    }
+
 }

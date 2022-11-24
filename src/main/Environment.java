@@ -32,4 +32,6 @@ public abstract class Environment extends Card{
        // objectNode.put("attackDamage", this.attackDamage);
         return objectNode;
     }
+
+    public abstract Card copy();
 }

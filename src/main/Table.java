@@ -65,9 +65,7 @@ public class Table {
 
 
     public Card getCardAtPosition(int x, int y) {
-        if(table[x][y] != null)
-            return table[x][y];
-        return null;
+        return table[3 - x][y];
     }
 
     public int findCardRow(Card card) {
@@ -84,16 +82,32 @@ public class Table {
         // TODO - de mutat in table si de apelat de acolo!!
         // e proprietatea lui TABLE!
 
-        ArrayNode frozenCards = object.createArrayNode();
-        for(Card[] row : table )
-            for(Card card : row ) {
-                if(card != null)
-                    frozenCards.add(card.cardTransformToAnObjectNode(object));
+        ArrayNode allCards = object.createArrayNode();
+        for (int i = 3; i >= 0; --i) {
+            Card[] row = table[i];
+            ArrayNode innerArrayNode = object.createArrayNode();
+            for (Card card : row) {
+                if (card != null)
+                    innerArrayNode.add(card.cardTransformToAnObjectNode(object));
             }
-        return frozenCards;
+            allCards.add(innerArrayNode);
+        }
+        return allCards;
     }
 
-
+    void fillSpaces() {
+        for (Card[] row : table) {
+            int i = 0;
+            for (Card card : row) {
+                if (card != null && ((Minion)card).getHealth() > 0) {
+                    row[i] = card;
+                    i++;
+                }
+            }
+            for (; i < row.length; ++i)
+                row[i] = null;
+        }
+    }
 
 
 }

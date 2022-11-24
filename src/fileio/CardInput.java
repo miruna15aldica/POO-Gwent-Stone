@@ -90,7 +90,7 @@ public final class CardInput {
         } else if(name.equals("The Ripper")) {
             return new Ripper(mana, description, colors, health, attackDamage);
         } else if(name.equals("The Cursed One")) {
-            return new Cursed(mana, description, colors, health, attackDamage);
+            return new Cursed(mana, description, colors, health);
         } else if(name.equals("Miraj")) {
             return new Miraj(mana, description, colors, health, attackDamage);
         } else if(name.equals("Goliath")) {

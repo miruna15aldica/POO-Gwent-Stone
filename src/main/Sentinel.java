@@ -16,5 +16,8 @@ public class Sentinel extends Minion {
 
     }
 
-
+    @Override
+    public Card copy() {
+        return new Sentinel(mana, description, colors, health, attackDamage);
+    }
 }
